@@ -18,17 +18,6 @@ public class LaunchActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_launch);
-
-/*        Button orderButton = (Button) findViewById(R.id.OrderButton);
-
-        orderButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                display(1);
-            }
-        });
-*/
-
     }
 
     /**
@@ -37,11 +26,11 @@ public class LaunchActivity extends AppCompatActivity {
     public void submitOrder(View view)
     {
         String priceMessage = "";
-        if(numberOfCoffeesOrdered > 0)
-            priceMessage = "Total: $"+ numberOfCoffeesOrdered*5+"\nThank you!";
-        else
-            priceMessage = " Total: $0";
-        displayMessage(priceMessage);
+        int finalPrice = calculatePrice(numberOfCoffeesOrdered);
+
+        String finalOrderDescription = createOrderSummary(finalPrice);
+
+        displayMessage(finalOrderDescription);
         displayQuantity(numberOfCoffeesOrdered);
         //displayPrice(numberOfCoffeesOrdered * pricePerCoffee);
     }
@@ -49,28 +38,12 @@ public class LaunchActivity extends AppCompatActivity {
     /**
      * This method displays the given quantity value on the screen.
      */
-    private void displayQuantity(int number) {
+    private void displayQuantity(int quantityNumber) {
         TextView quantityTextView = (TextView) findViewById(
                 R.id.quantity_text_view);
-        quantityTextView.setText("" + number);
+        quantityTextView.setText("" + quantityNumber);
     }
 
-    /**
-     * This method displays the given price on the screen.
-     */
-    private void displayPrice(int number) {
-        TextView priceTextView = (TextView) findViewById(R.id.price_text_view);
-        priceTextView.setText(NumberFormat.getCurrencyInstance().format(number));
-
-        if(number == 0)
-        {
-            Toast.makeText(getApplicationContext(),"You can't buy happiness", Toast.LENGTH_SHORT).show();
-            Toast.makeText(getApplicationContext(), "But you can buy COFFEE", Toast.LENGTH_SHORT).show();
-        }
-        else
-            Toast.makeText(getApplicationContext(),"Enjoy your coffee, Thank you !!!", Toast.LENGTH_SHORT).show();
-
-    }
 
     /**
      * increment coffee cups by 1
@@ -94,8 +67,33 @@ public class LaunchActivity extends AppCompatActivity {
      * This method displays the given text on the screen.
      */
     private void displayMessage(String message) {
-        TextView priceTextView = (TextView) findViewById(R.id.price_text_view);
-        priceTextView.setText(message);
+        TextView orderSummaryTextView = (TextView) findViewById(R.id.order_summary_text_view);
+        orderSummaryTextView.setText(message);
+    }
+
+
+    /**
+     * Calculates the price of the order.
+     *
+     * @param quantity is the number of cups of coffee ordered
+     */
+    private int calculatePrice(int quantity) {
+        int price = quantity * pricePerCoffee;
+        return price;
+
+    }
+
+    private int calculatePrice(int quantity, int pricePerCup) {
+        int price = quantity * pricePerCup;
+        return price;
+    }
+
+    private String createOrderSummary(int price)
+    {
+        String orderDescription = "";
+        if(price > 0)
+            orderDescription = " Name : Yogesh Dixit \n Quantity: " + numberOfCoffeesOrdered + "\n Total: $"+ price+ "\n Thank You !";
+        return orderDescription;
     }
 
 }
